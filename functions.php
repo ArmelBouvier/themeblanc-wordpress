@@ -1,5 +1,9 @@
 <?php // Fonctions pour le thème
 
+//ajout des miniatures sur les articles
+add_theme_support('post-thumbnails');
+
+
 // Déclaration des feuilles de style et js
 function declaration_scripts_theme()
 {
