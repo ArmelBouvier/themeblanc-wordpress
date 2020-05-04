@@ -2,34 +2,30 @@
 
     <section class="last-news">
         <div class="container">
+            <?php $args = ['post_type' => 'post',
+                            'post-per_page' => 4,
+                            'orderby' => 'date',
+                            'order' => 'DESC'
+            ];
+            $i = 0; ?>
             <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators">
                     <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-                    <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                    <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
                 </ol>
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
+                    <?php $ma_boucle = new WP_Query($args);
+                    // Je teste si j'ai des articles
+                    if ($ma_boucle->have_posts()) :
+                        while( $ma_boucle->have_posts()) : $ma_boucle->the_post();
+                    ?>
+                    <div class="carousel-item <?= $i === 0 ? 'active' : ''; ?>">
                         <img src="https://placehold.it/1280x450" class="d-block w-100" alt="...">
                         <div class="carousel-caption d-none d-md-block">
-                            <h5>First slide label</h5>
-                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                            <h5><?php the_title();?></h5>
+                            <?php the_excerpt();?>
                         </div>
                     </div>
-                    <div class="carousel-item">
-                        <img src="https://placehold.it/1280x450" class="d-block w-100" alt="...">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Second slide label</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://placehold.it/1280x450" class="d-block w-100" alt="...">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Third slide label</h5>
-                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                        </div>
-                    </div>
+                    <?php $i++; endwhile; endif; ?>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
