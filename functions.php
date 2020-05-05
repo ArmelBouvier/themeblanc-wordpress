@@ -14,6 +14,39 @@ function declaration_scripts_theme()
 	wp_enqueue_style('app', get_template_directory_uri() . '/css/app.css');
 }
 add_action('wp_enqueue_scripts', 'declaration_scripts_theme');
+
+// Déclaration des menus
+register_nav_menus([
+	'menu-header'   => __('Menu principal', 'themeblanc')
+]);
+// Ajout des classes bootstrap sur les
+function add_specific_menu_location_atts($atts, $item, $args){
+	// Vérifier qu'on se situe bien dans le menu principal
+	if ($args->theme_location === 'menu-header'){
+		$atts['class'] = 'nav-link';
+	}
+	foreach($item->classes as $class){
+		if($class === 'menu-item-has-children'){
+			$atts['class'] = 'nav-link dropdown-toggle';
+		}
+	}
+	return $atts;
+}
+add_filter('nav_menu_link_attributes', 'add_specific_menu_location_atts', 10, 3);
+
+// Ajout des classes bootstrap sur les li
+function add_specific_menu_li_atts($classes, $item, $args){
+	if($args->theme_location === 'menu-header'){
+		foreach($classes as $class){
+			if($class === 'menu-item-has-children'){
+				$classes[] = "dropdown";
+			}
+		}
+		$classes[] = "nav-item";
+	}
+	return $classes;
+}
+
 // Import du fichier CPT (custom post type) portfolio
 include_once 'inc/portfolio.php';
 // Import du fichier metabox pour ajouter un champ personnalisé supplémentaire
