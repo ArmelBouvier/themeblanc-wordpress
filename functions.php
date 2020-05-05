@@ -18,6 +18,38 @@ add_action('wp_enqueue_scripts', 'declaration_scripts_theme');
 include_once 'inc/portfolio.php';
 // Import du fichier metabox pour ajouter un champ personnalisé supplémentaire
 include_once 'inc/metabox_portfolio.php';
+
+// Déclarer l'utilisation des widgets
+add_action('widgets_init', 'widget_footer');
+function widget_footer()
+{
+	register_sidebar([
+		'name'          => __('zone de Widget', 'themeblanc'),
+		'id'            => 'zone-footer',
+		'description'   => 'Zone dédiée aux widgets footer',
+		'class'         => 'widget-footer',
+		'before_widget' => '<div id="1%s" class="%2$s col">',
+		// lien pour les sprintf https://www.php.net/manual/fr/function.sprintf.php
+		'after_widget'  => '</div>',
+		'before_title'  => '<h3 class="widgettitle">',
+		'after_title'   => '</h3>'
+		]);
+}
+
+add_filter('dynamic_sidebar_params', 'change_before_widget');
+function change_before_widget($params){
+	$sidebar_id = $params[0]['id'];
+	if ($sidebar_id === 'zone-footer'){
+		$total_widget = wp_get_sidebars_widgets();
+		$sidebar_widget = count($total_widget[$sidebar_id]);
+
+		$params[0]['before_widget'] = str_replace('class="',
+			'class="col-md-' . floor(12 / $sidebar_widget) . ' ',
+			$params[0]['before_widget']);
+	}
+	return $params;
+}
+
 /*
  * Lien utiles
  * https://developer.wordpress.org/themes/basics/template-hierarchy/
